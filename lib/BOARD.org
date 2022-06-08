@@ -1,0 +1,35 @@
+#+title: Board
+#+PROPERTY: header-args :tangle board.rb
+
+* Board
+Generates board and manages turn. Plants bombs in board.
+#+begin_src ruby
+require_relative 'tile'
+class Board
+#+end_src
+
+** DONE init_grid
+Generate 9X9 2D array and populate it with a Tiles.
+
+#+begin_src ruby
+  def init_grid
+    Array.new(9) do |row|
+      Array.new(9) { |col| Tile.new(self, [row, col]) }
+    end
+  end
+#+end_src
+
+
+** HOLD initialize
+Initializes board grid 9x9 emptry 2D array
+#+begin_src ruby
+  def initialize(board = self.init_grid)
+    @grid = board
+  end
+#+end_src
+
+
+* end class
+#+begin_src ruby
+end
+#+end_src

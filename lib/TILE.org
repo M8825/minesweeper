@@ -1,0 +1,124 @@
+#+title: Tile
+#+PROPERTY: header-args :tangle tile.rb
+
+* class Tile
+Class for endividual square on the board.
+#+begin_src ruby :session
+class Tile
+#+end_src
+
+** DONE adjacent_pos
+row and col positions for adjacent neighbors. We need those coordinates to check bombed neighbors and
+assigned face value to a tile accorting to number of bombs
+#+begin_src ruby
+  ROW = [-1, -1, -1, 0, 0, 0, 1, 1, 1]
+  COL = [-1, 0, 1, -1, 0, 1, -1, 0, 1]
+#+end_src
+
+
+** HOLD Initialize
+We want board to be passed on initialize so the tile instance can use it
+to find its neighbors.
+
+- board    :: Board instance passed form Board instance
+- value    :: #REVIEW I think I'll need it for 1 digit numbers
+- flagged  :: User can flag the certain square.
+- revealed :: Indication whether any given squre is revealed or not
+- bombed   :: Indicating whether or not value for self is *
+
+#+begin_src ruby
+  def initialize(board, pos)
+    @grid = board
+    @pos = pos
+    @flagged = false
+    @revealed = false
+    @bombed = false
+  end
+#+end_src
+
+
+** DONE Getter with ?
+Can't have ? in attr_*.
+*** flagged?
+#+begin_src ruby
+  def flagged?
+    @flagged
+  end
+#+end_src
+
+
+*** revealed?
+#+begin_src ruby
+  def revealed?
+    @revealed
+  end
+#+end_src
+
+
+*** bombed?
+#+begin_src ruby
+  def bombed?
+    @bombed
+  end
+#+end_src
+
+
+** TODO reveal
+If chosen square to reveal contains a bomb, game over. Otherwise, it will
+be revealed. If none of its neighbors contains a bomb, then all the adjacent
+neighbors are also revealed. If any of the neighbors have no adjacent bombs,
+they too are revealed.
+
+#+begin_src ruby
+  def reveal()
+
+  end
+#+end_src
+
+
+** DONE #neighbors
+Scan, push and return list of neighbors in board so #neighbor_bomb_count can use the list to return number
+of bombed adjacent neighbors. Returns an array containing all neighbors of self.
+
+#+begin_src ruby
+  def neighbors()
+    row, col = pos
+    row.each_index.map do |i|
+      n_row = ROW[i]
+      n_col = COL[i]
+      @grid[row + n_row][col + n_col]
+    end
+  end
+#+end_src
+
+
+** DONE #neighbor_bomb_count
+Calls #neighbors and counts how many of the Tile's face value is a bomb.
+
+#+begin_src ruby
+  def neighbor_bomb_count
+    neighbors.count { |tile| tile.bombed?}
+  end
+#+end_src
+
+
+
+** DONE [] - Look up Tile
+Referes to square on the board like slot in an array.
+
+#+begin_src ruby
+  def [](pos)
+    row, col = pos
+    grid[row][col]
+  end
+#+end_src
+
+
+* Close class
+At this point I don't know better solution, I will just do like this
+
+#+begin_src ruby
+  private
+  attr_reader :grid
+end
+#+end_src
