@@ -1,22 +1,16 @@
 #+title: Tile
-#+PROPERTY: header-args :tangle tile.rb
 
-* class Tile
-Class for endividual square on the board.
-#+begin_src ruby :session
-class Tile
-#+end_src
 
-** DONE adjacent_pos
+* DONE adjacent_pos
 row and col positions for adjacent neighbors. We need those coordinates to check bombed neighbors and
 assigned face value to a tile accorting to number of bombs
+#+name: adjacent_pos
 #+begin_src ruby
-  ROW = [-1, -1, -1, 0, 0, 0, 1, 1, 1]
-  COL = [-1, 0, 1, -1, 0, 1, -1, 0, 1]
+ROW = [-1, -1, -1, 0, 0, 0, 1, 1, 1]
+COL = [-1, 0, 1, -1, 0, 1, -1, 0, 1]
 #+end_src
 
-
-** HOLD Initialize
+* HOLD Initialize
 We want board to be passed on initialize so the tile instance can use it
 to find its neighbors.
 
@@ -26,44 +20,54 @@ to find its neighbors.
 - revealed :: Indication whether any given squre is revealed or not
 - bombed   :: Indicating whether or not value for self is *
 
+#+name: initialize
 #+begin_src ruby
-  def initialize(board, pos)
-    @grid = board
-    @pos = pos
-    @flagged = false
-    @revealed = false
-    @bombed = false
-  end
+def initialize(board, pos)
+  @grid = board
+  @pos = pos
+  @flagged = false
+  @revealed = false
+  @bombed = false
+end
+#+end_src
+* HOLD attr_reader
+Set getter for position of the tile. At this moment I need it for debugging #REVIEW
+#+name: attr_reader
+#+begin_src ruby
+attr_reader :pos
 #+end_src
 
 
-** DONE Getter with ?
+* DONE Getters with ?
 Can't have ? in attr_*.
-*** flagged?
+** flagged?
+
+#+name: flagged?
 #+begin_src ruby
-  def flagged?
-    @flagged
-  end
+def flagged?
+  @flagged
+end
 #+end_src
 
 
-*** revealed?
+** revealed?
+#+name: revealed?
 #+begin_src ruby
-  def revealed?
-    @revealed
-  end
+def revealed?
+  @revealed
+end
 #+end_src
 
 
-*** bombed?
+** bombed?
+#+name: bombed?
 #+begin_src ruby
-  def bombed?
-    @bombed
-  end
+def bombed?
+  @bombed
+end
 #+end_src
 
-
-** TODO reveal
+* WAIT reveal - Get back to it after plant a bombs from board
 If chosen square to reveal contains a bomb, game over. Otherwise, it will
 be revealed. If none of its neighbors contains a bomb, then all the adjacent
 neighbors are also revealed. If any of the neighbors have no adjacent bombs,
@@ -75,50 +79,89 @@ they too are revealed.
   end
 #+end_src
 
-
-** DONE #neighbors
+* DONE #neighbors
 Scan, push and return list of neighbors in board so #neighbor_bomb_count can use the list to return number
 of bombed adjacent neighbors. Returns an array containing all neighbors of self.
-
+#+name: neighbors
 #+begin_src ruby
-  def neighbors()
-    row, col = pos
-    row.each_index.map do |i|
-      n_row = ROW[i]
-      n_col = COL[i]
-      @grid[row + n_row][col + n_col]
-    end
+def neighbors()
+  row, col = pos
+
+  row.each_index.map do |i|
+    n_row = ROW[i]
+    n_col = COL[i]
+    @grid[row + n_row][col + n_col]
   end
+end
 #+end_src
 
-
-** DONE #neighbor_bomb_count
+* DONE #neighbor_bomb_count
 Calls #neighbors and counts how many of the Tile's face value is a bomb.
-
+#+name: neighbor_bomb_count
 #+begin_src ruby
-  def neighbor_bomb_count
-    neighbors.count { |tile| tile.bombed?}
+def neighbor_bomb_count
+  neighbors.count { |tile| tile.bombed?}
+end
+#+end_src
+
+* DONE #inspect
+We pass Board instance to an individual Tile at initialization. We don't want to print out that much information
+on the screen when debuging, therefore we filter info we want to see
+#+name: inspect
+#+begin_src ruby
+  def inspect
+    { pos: pos,
+      bombed: bombed?,
+      flagged: flagged?,
+      explored: revealed? }.inspect
   end
 #+end_src
 
-
-
-** DONE [] - Look up Tile
+* DONE #[]
 Referes to square on the board like slot in an array.
-
+#+name: []
 #+begin_src ruby
-  def [](pos)
-    row, col = pos
-    grid[row][col]
-  end
+def [](pos)
+  row, col = pos
+  grid[row][col]
+end
+#+end_src
+
+* DONE #plan_bomb
+After generating random position in Board instance, we call this method from a loop to make ~@bombed = ture~
+
+#+name: plant_bomb
+#+begin_src ruby
+def plant_bomb
+  @bombed = true
+end
 #+end_src
 
 
-* Close class
-At this point I don't know better solution, I will just do like this
+* noweb
+#+begin_src ruby :noweb yes :tangle tile.rb
+class Tile
+  <<adjacent_pos>>
 
-#+begin_src ruby
-  private
-  attr_reader :grid
+  <<attr_reader>>
+
+  <<initialize>>
+
+  <<flagged?>>
+
+  <<revealed?>>
+
+  <<bombed?>>
+
+  <<inspect>>
+
+  <<neighbors>>
+
+  <<neighbor_bomb_count>>
+
+  <<[]>>
+
+  <<plant_bomb>>
+
 end
 #+end_src

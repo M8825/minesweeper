@@ -1,16 +1,12 @@
 #+title: Board
-#+PROPERTY: header-args :tangle board.rb
 
 * Board
 Generates board and manages turn. Plants bombs in board.
-#+begin_src ruby
-require_relative 'tile'
-class Board
-#+end_src
 
 ** DONE init_grid
 Generate 9X9 2D array and populate it with a Tiles.
 
+#+name: init_grid
 #+begin_src ruby
   def init_grid
     Array.new(9) do |row|
@@ -18,18 +14,87 @@ Generate 9X9 2D array and populate it with a Tiles.
     end
   end
 #+end_src
-
+** DONE #attr_read
+At this moment initialize grid for just debugging purpouses #REVIEW
+#+name: attr_read
+#+begin_src ruby
+attr_reader :grid
+#+end_src
 
 ** HOLD initialize
 Initializes board grid 9x9 emptry 2D array
+
+#+name: initialize
 #+begin_src ruby
   def initialize(board = self.init_grid)
     @grid = board
   end
 #+end_src
 
+** DONE #[]
+Returns Tile at a given position on grid.
 
-* end class
+#+name: []
 #+begin_src ruby
+  def [](pos)
+    row, col = pos
+    @grid[row][col]
+  end
+#+end_src
+** DONE #plant_bombs
+Method plants bombs on grid randomly. Generates random row and column numbers between 0 to 8 and plants
+a bomb on a given position. Number of random bombs equals to length of the board / 2. After generating
+random row and col integers we check if a Tile in a given position on board is already marked a bomb.
+If ~tile.bombed?~ returns ~false~ we call ~tile.plant_bomb~ to toggle it.
+
+#+name: plant_bombs
+#+begin_src ruby
+def plant_bombs
+    num_of_bombs = 0
+    g_s = grid_size / 2
+
+    until num_of_bombs == g_s
+        rand_row = rand(0..8)
+        rand_col = rand(0..8)
+        rand_pos = [rand_row, rand_col]
+
+        tile = self[rand_pos]
+        byebug
+        next if tile.bombed?
+
+        tile.plant_bomb
+        num_of_bombs += 1
+    end
+end
+#+end_src
+
+** DONE #grid_size
+Returns integer equals to length of the grid
+
+#+name: grid_size
+#+begin_src ruby
+def grid_size
+  @grid.length
+end
+#+end_src
+
+
+* Tangle
+#+begin_src ruby :noweb yes :tangle board.rb
+require 'byebug' #TODO: remove once done
+require_relative 'tile'
+
+class Board
+  <<init_grid>>
+
+  <<attr_read>>
+  
+  <<initialize>>
+
+  <<[]>>
+
+  <<plant_bombs>>
+
+  <<grid_size>>
 end
 #+end_src
