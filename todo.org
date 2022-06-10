@@ -4,7 +4,8 @@
 :Effort:   5:00
 :END:
 :LOGBOOK:
-CLOCK: [2022-06-08 Wed 13:59]
+CLOCK: [2022-06-10 Fri 14:46]--[2022-06-10 Fri 15:11] =>  0:25
+CLOCK: [2022-06-08 Wed 13:59]--[2022-06-10 Fri 14:10] => 48:11
 CLOCK: [2022-06-08 Wed 12:39]--[2022-06-08 Wed 12:45] =>  0:0
 :END:
 - [[https://open.appacademy.io/learn/full-stack-online/ruby/minesweeper][Project link]]

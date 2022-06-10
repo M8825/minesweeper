@@ -44,11 +44,15 @@ class Tile
     self
   end
 
+  def reveal_bombs
+    @revealed = true if bombed?
+  end
+
   def render
     if flagged?
       'F'
-    elsif bombed? # TODO: Delete this after debugging
-      'X'
+    elsif bombed? && revealed? # This can be true if player just revealed bombed tile
+      'B'
     elsif revealed?
       neighbor_bomb_count == 0 ? '_' : neighbor_bomb_count.to_s
     else
