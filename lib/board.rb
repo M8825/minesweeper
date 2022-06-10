@@ -8,6 +8,8 @@ class Board
       end
     end
 
+  attr_reader :grid
+
   def initialize(board = self.init_grid)
     @grid = board
     plant_bombs

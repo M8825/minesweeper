@@ -1,6 +1,6 @@
-# NOTE: End the game
 require 'pry-byebug'
 require_relative 'board'
+require 'yaml'
 
 class Game
   def initialize
@@ -8,7 +8,6 @@ class Game
   end
 
   def play_turn
-    # REVIEW:Refactor properly
     puts board.render
     prefix, position = get_pos
     next_move(prefix, position)
@@ -29,13 +28,13 @@ class Game
     prefix, pos = nil, nil
 
     until (pos && prefix) && (valid_prefix?(prefix) && valid_pos?(pos))
-      puts "Please enter prefix and position (eg. 'f3,4' or 'r3,4'):"
+      puts "\nPlease enter prefix and position (eg. 'f3,4' or 'r3,4'):"
       print "> "
 
       begin
         prefix, pos = parse_pos(gets.chomp)
       rescue
-        puts 'Invalid input, please try again'
+        puts '\nInvalid input, please try again'
         puts ''
         prefix, pos = nil, nil
       end
@@ -45,11 +44,11 @@ class Game
   end
 
   def game_over?
-    @board.win? || @board.lost?
+    board.win? || board.lost?
   end
 
   def next_move(pref, pos)
-    tile = @board[pos]
+    tile = board[pos]
 
     case pref
     when 'f'
@@ -77,10 +76,29 @@ class Game
   end
 
   def parse_pos(str_pos)
-    pref = str_pos[0]
-    pos = str_pos[1..-1].split(',').map { |str_num| Integer(str_num)}
+    case str_pos
+    when 'save!'
+      save_game
+    when 'load!'
+      load_game
+    else
+      pref = str_pos[0]
+      pos = str_pos[1..-1].split(',').map { |str_num| Integer(str_num)}
 
-    [pref, pos]
+      [pref, pos]
+    end
+  end
+
+  def save_game
+    File.open('board.yml', 'w') { |file| file.write(@board.to_yaml)}
+    puts "\nGame has been saved!"
+    exit
+  end
+
+  def load_game
+    @board = YAML::load(File.read('board.yml'))
+    puts @board.render
+    puts "\nGame has been loaded!"
   end
 end
 
