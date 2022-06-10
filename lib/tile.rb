@@ -33,13 +33,12 @@ class Tile
   end
 
   def reveal
-    # FIXME: make sure it works properly, after you render board
     return self if @flagged
     return self if @revealed
 
     @revealed = true
     if !bombed? && (neighbor_bomb_count == 0) # If any of the adjacent neighbors have no bombs
-      neighbors.each { |tile| tile.reveal}    # they too are revealed
+      neighbors.each { |tile| tile.reveal unless tile.flagged? }    # they too are revealed
     end
 
     self
@@ -81,5 +80,9 @@ class Tile
 
   def plant_bomb
     @bombed = true
+  end
+
+  def flag
+    flagged? ? @flagged = false : @flagged = true unless revealed?
   end
 end

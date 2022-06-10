@@ -1,4 +1,4 @@
-require 'pry-byebug' #TODO: remove once done
+require 'pry-byebug'
 require_relative 'tile'
 
 class Board
@@ -12,6 +12,7 @@ class Board
   
   def initialize(board = self.init_grid)
     @grid = board
+    plant_bombs
   end
 
   def [](pos)
@@ -21,11 +22,10 @@ class Board
 
   def plant_bombs
       num_of_bombs = 0
-      g_s = 10 # TODO: Make it abstract
+      g_s = grid_size + 1 # Default size from game webisete for 9x9 board
   
       until num_of_bombs == g_s
-          rand_row = rand(0..8)
-          rand_col = rand(0..8)
+          rand_row, rand_col = rand(0..8), rand(0..8)
           rand_pos = [rand_row, rand_col]
   
           tile = self[rand_pos]
@@ -37,20 +37,19 @@ class Board
   end
 
   def render
+    # It renders board, by calling render method on each tile
     puts ' ' + (0..8).to_a.join(' ')
     @grid.each_with_index.map do |row, i|
       row.map(&:render).join(' ')
     end.join("\n")
   end
 
-  def play_turn
-    # TODO: logic for game over
-    render
-  end
-
-  private
-
   def grid_size
     @grid.length
+  end
+
+  def win?
+    # REVIEW: implement proper wining rules
+    false
   end
 end
