@@ -2,6 +2,9 @@
 
 
 * DONE adjacent_pos
+:LOGBOOK:
+CLOCK: [2022-06-10 Fri 09:13]--[2022-06-10 Fri 09:38] =>  0:25
+:END:
 row and col positions for adjacent neighbors. We need those coordinates to check bombed neighbors and
 assigned face value to a tile accorting to number of bombs
 #+name: adjacent_pos
